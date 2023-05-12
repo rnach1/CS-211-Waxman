@@ -1,0 +1,64 @@
+#include<iostream>
+using namespace std;
+
+bool ok(int b[], int column){ 
+
+  int a[8][5] = { 
+        {-1}, // neighbors of 0
+        {0,-1}, //neighbors of 1
+        {0,-1}, // neighbors of 2
+        {0, 1, 2, -1}, // neighbors of 3
+        {0,1,3,-1}, // neighbors of 4
+        {1, 4, -1}, // neighbors of 5
+        {2,3,4,-1}, // neighbors of 6
+        {3,4,5,6,-1} // neighbors of 7
+    }; 
+  //a[][] is the helper array with -1 being the centinal
+    /* the ok function checks two things: if a number has been used already and if a number is placed in an adjacent square */
+    for(int i = 0; i<column; i++){
+        if(b[i]==b[column]) return false; 
+        /* checks if one of the values has already been used */
+       }   
+    for(int i = 0; a[column][i] != -1; i++){
+      if(abs(b[a[column][i]] - b[column]) == 1) return false;
+    } /* checks if a number has an abs difference of 1. if it does then the adjacency test fails */
+    return true;    
+  }
+
+void print(int q[], int solutionPossibilities){
+    cout << "Outcome #" << solutionPossibilities << ": ";
+     for(int i = 0; i < 8; i++){ 
+        cout << q[i]+1; // added one to print values 1 through 8 and not 0 through 7. 
+     } /* the function prints out the 1-D array solution for 8 numbers in a cross with the numbers being placed in the order shown during lecture as the first row having boxes 0, and 1, the second row having 2, 3, 4, and 5, and the last row hvaing boxes 6, and 7 respectively. This means that the number seen in the outcome, such as 3571846 will have number 3 in box 0, number 5 in box 1, etc. */
+    cout << endl;
+}
+
+int main() {
+    cout<<"Outcomes for 8 Numbers in a Cross: \n";
+    int q[8] = {0}, col = 0, possibleOutcomes = 0;
+    
+    q[col] = 0; // start at row 0 column 0
+    /* the outer most while loop is represented as NC and the inner one is NR */ 
+    while(col>=0){ // while we are still on the cross board from the leftmost point (row zero and col zero)
+        col++; // go to next column because we placed a number in the top left 
+        if(col==8) { 
+            /* if we get to the box that equals 8 (off the crossboard) we have successfully placed all 8 numbers and can print the board */
+            possibleOutcomes++; // increment to start at 1
+            print(q, possibleOutcomes); /* takes two parameters: the array and the number of solutions */
+            col--; // will backtrack so we find another solution
+        }
+        else
+        q[col] = -1;  
+        while(col>=0){ /* NextRow */                                      
+            q[col]++; // q[col] is incremented so we hit rows 0 through 7 (inclusive)
+           if(q[col] == 8)
+            col--; // backtracks after we tested 8 rows and couldn't place a number
+            else 
+            if (ok(q,col)) break; /* everytime we change our row we go into the ok function. We break out of the inner while loop when we can place a number (returns true) in that box and go to the next box/column */
+        }
+    } /* used while loops because we want to go up and down the rows of the columns and a for loop would increment by 1 going down */
+    return 0;
+}
+
+
+
