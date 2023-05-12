@@ -1,0 +1,69 @@
+#include <iostream>
+using namespace std;
+
+int main () {
+    string userInput = "";
+    cout<<"Please enter a capital letter for each team. If you want to stop please enter 'done': ";
+    cin>>userInput;
+    
+    while (userInput!="done") {
+        int teams[26] = {0};
+        double scores[26] = {0};
+        
+        for(int i = 0; i<userInput.size(); i++){
+            if(userInput[i] < 'A' || userInput[i] > 'Z'){
+                cout<<"You did not enter capital letter!";
+                return 0;
+            }
+            else {
+                int x = (int)userInput[i]-65;
+                teams[x]++;
+                scores[x]+=(i+1);
+            }
+        }
+        
+        int numberOfTeams = 0, sameNumberOfPlayers = -1;
+        for(int i = 0; i<26; i++){
+            if(teams[i]!=0){
+                numberOfTeams++;
+                if (sameNumberOfPlayers == -1){
+                    sameNumberOfPlayers = teams[i];
+                }
+                if(teams[i] != sameNumberOfPlayers){
+                    cout<<"There are not the same number of players on each team!";
+                    return 0;
+                }
+            }
+            // else {
+                // cout<<"There are "<<numberOfTeams<<" teams." <<endl<<"There are "<<sameNumberOfPlayers<<" players on each team."<<endl;
+            // }
+        }
+    
+    cout<<"There are "<<numberOfTeams<<" teams." <<endl<<"There are "<<sameNumberOfPlayers<<" players on each team."<<endl;
+    
+    cout << "Teams\tScores" << endl;
+    
+    int winner = 0; 
+    double lowestScore = 9999999.0; //used a big number
+    for(int i = 0; i<26; i++){
+        scores[i]/=sameNumberOfPlayers; 
+        if(scores[i] != 0) {
+            cout << (char)(i+65) << "\t\t\t" << scores[i] << endl;
+            if (scores[i]<lowestScore) {
+                lowestScore = scores[i];
+                winner = i; 
+            }
+        }     
+    }
+        
+         //to determine the winner have a variable for minimum average and then loop through the averages and then you use if statements to replace with the smallest average as you look through it. 
+    cout<<"The winning team is team "<<(char)(winner+65)<<" with a score of "<<lowestScore<<"."<<endl;
+    
+    cout<<"Please enter a capital letter for each team. If you want to stop please enter 'done': ";
+    cin>>userInput;
+    }
+    
+    cout << "Finished." << endl;
+    
+    return 0;
+}
