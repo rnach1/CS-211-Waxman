@@ -1,0 +1,49 @@
+#include <iostream>
+
+using namespace std;
+
+bool ok(int q[], int c) {
+  /* function to check if a queen can be placed in the index of the array, b[c], which represents the row */
+   for (int i = 0; i < c; ++i)
+      if (q[i] == q[c] || abs(q[i] - q[c]) == c - i)
+         /* if one of the tests (row, down-diagonal, or up-diagonal) fails we return false and increment one to try the next row */
+         return false;
+   return true;
+}
+
+int numSols(int n) {
+   int* q = new int[n];
+   q[0] = 0; // start the queen at row 0 column 0
+   int col = 0, possibleOutcomes = 0;
+   while (col >= 0) { // Next column: while we are still on the board from the leftmost point (row zero and col zero)
+      if (col == n) { /* if we get to the column equals n (off the board) we have successfully placed all n queens and can print the board */
+         possibleOutcomes++; /* takes two parameters, the array and the number of solutions */
+        col--; // will backtrack so we find another solution
+      }
+      else
+         q[col] = -1;
+      while (col >= 0) { //Next Row
+         q[col]++; // q[col] is incremented so we hit rows 0 through n-1 (inclusive)
+         if (q[col] == n)
+            col--; // backtracks after we tested n rows and couldn't place a queen
+         else if (ok(q, col)){ /* everytime we change our row we go into the ok function. We break out of the while loop when we can place a queen (returns true) in that column and go to the next column */
+         col++; // increment to the next column
+           break;
+         }
+      }
+   }
+    /* used while loops because we want to go up and down the rows of the columns and a for loop would increment by 1 going down */
+   delete[] q; // clears up storage to avoid a memory leak
+   return possibleOutcomes; // returns the int, number of solutions
+}
+
+int main() {
+  int n;
+    cout<<"How many queens?: "; // ask the user for num of queens
+  cin>>n;
+   for (int i = 1; i <= n; i++)
+     /*the for loop will go through every queen problem (1 through n inclusive) and will find the number of solutions there are for the particular problem*/
+      cout << "There are " << numSols(i) << " solutions to the " << i << " queens problem."<<endl;
+   return 0;
+}
+/*a function call is more organized and easier for the user to read as waxman mentioned in class and I decided to go with that for this project*/
