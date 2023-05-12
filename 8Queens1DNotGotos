@@ -1,0 +1,44 @@
+#include<iostream>
+using namespace std;
+
+bool ok(int b[], int column){ 
+    /* function to check if a queen can be placed in the index of the array, b[c], which represents the row */
+    for(int i = 0; i<column; i++){
+        if(b[i]==b[column] || column-i == abs(b[column]-b[i])) return false;
+        /* if one of the tests (row, down-diagonal, or up-diagonal) fails we return false and increment one to try the next row */
+       }   
+       return true;    
+    }
+
+void print(int q[], int solutionPossibilities){
+    cout << "Outcome #" << solutionPossibilities << ": ";
+     for(int i = 0; i < 8; i++){ 
+        cout << q[i];
+     } /* prints out the 1-D array solution for 8Queens with each number being the row where the queen is placed and each position of the number being the column i.e. 04752613 means that there is a queen at col 0 row 0, col 1 row 4, col 3 row 7, etc. */
+    cout << endl;
+}
+
+int main() {
+    int q[8] = {0}, col = 0, possibleOutcomes = 0;
+    q[col] = 0; // start the queen at row 0 column 0
+    
+    while(col>=0){ // while we are still on the board from the leftmost point (row zero and col zero)
+        col++; // go to next column because we placed a queen in top left 
+        if(col==8) { 
+            /* if we get to the column equals 8 (off the board) we have successfully placed all 8 queens and can print the board */
+            possibleOutcomes++; // increment to start at 1
+            print(q, possibleOutcomes); /* takes two parameters, the array and the number of solutions */
+            col--; // will backtrack so we find another solution
+        }
+        else
+        q[col] = -1;  
+        while(col>=0){ /* */
+            q[col]++; // q[col] is incremented so we hit rows 0 through 7 (inclusive)
+           if(q[col] == 8)
+            col--; // backtracks after we tested 8 rows and couldn't place a queen
+            else 
+            if (ok(q,col)) break; /* everytime we change our row we go into the ok function. We break out of the while loop when we can place a queen (returns true) in that column and go to the next column */
+        }
+    } /* used while loops because we want to go up and down the rows of the columns and a for loop would increment by 1 going down */
+    return 0;
+}
