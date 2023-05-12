@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+bool ok(int q[], int c, int n) {
+  /* function to check if a bishop can be placed in the index of the array being passed in*/
+   for (int i = 0; i < c; ++i)
+       if(abs(q[c]/n - q[i]/n) == abs(q[c]%n - q[i]%n)) return false;
+         /* we want to check the row and column of the bishop. the row of the bisgop is shown by taking the position of the bishop and dividing by n, the col would be mod because it tells us how far off the starting point we are. */
+   return true;
+}
+
+int K_Bishops(int n, int k) {
+   int* q = new int[n]; // creating a dynamic array
+   q[0] = 0; // start the queen at row 0 column 0
+   int col = 0, possibleOutcomes = 0;
+   while (col >= 0) { // Next column: while we are still on the board from the leftmost point (row zero and col zero)
+     col++; // increment to the next column
+      if (col == k) { /* if we get to the column equals k (off the board) we have successfully placed all k bishops and can print the board */
+         possibleOutcomes++; /* takes two parameters, the array and the number of solutions */
+        col--; // will backtrack so we find another solution
+      }
+      else
+         q[col] = q[col-1]; // we want to conitnue the code to find another solution from where the other bishop was left off. 
+     
+      while (col >= 0) { //Next Row
+         q[col]++; // q[col] is incremented so we hit rows 0 through n-1 (inclusive)
+         if (q[col] == n*n) //if we tried every square on the nXn board
+            col--; // backtracks after we tested n rows and couldn't place a queen
+         else if (ok(q, col, n)){ /* everytime we change our row we go into the ok function. We break out of the while loop when we can place a queen (returns true) in that column and go to the next column */
+           break;
+         }
+      }
+   }
+    /* used while loops because we want to go up and down the rows of the columns and a for loop would increment by 1 going down */
+   delete[] q; // clears up storage to avoid a memory leak
+   return possibleOutcomes; // returns the int, number of solutions
+}
+
+int main() {
+  int n, k;
+
+  
+  while(n != -1){ // -1 will terminate the program
+    cout<<"How many columns?: "; // ask the user for num of columns = n
+    cin>>n;
+    if(n==-1){
+      cout<<"The program has terminated. Goodbye!";
+        return 0;
+    }
+    cout<<"How many bishops: ";
+    cin>>k;
+    
+    while(k>n || n==-1) {
+      if(n==-1){
+        cout<<"The program has terminated. Goodbye!";
+        return 0;
+      }
+      cout<<"Invalid, please try again"<<endl;
+      cout<<"How many columns?: "; // ask the user for num of columns = n
+      cin>>n;
+      cout<<"How many bishops: ";
+      cin>>k;
+  }
+    cout << "There are " << K_Bishops(n, k) << " solutions."<<endl;
+  }
+  return 0;
+}
+/*a function call is more organized and easier for the user to read as waxman mentioned in class and I decided to go with that for this project*/
+
+
+
+
+
+
