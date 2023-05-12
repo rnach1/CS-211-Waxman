@@ -1,0 +1,59 @@
+#include<iostream>
+using namespace std;
+
+bool ok(int b[], int column){ 
+
+    int mp[3][3] = {{0,2,1}, //m0 preference
+                    {0,2,1}, //m1 preference
+                    {1,2,0}}; //m2 preference
+    int wp[3][3] = {{2,1,0}, //w0 preference
+                    {0,1,2}, //w1 preference
+                    {2,0,1}}; //w2 preference
+  //wp[][] and mp[][] were given as helper arrays by professor Waxman 
+    /* the ok function checks two things: if woman or man was already used, and if the relationship is stable */
+    for(int i = 0; i<column; i++){
+        if(b[i]==b[column]) return false; 
+        /* checks if one of the values (men or women) has already been used */
+      
+      if (mp[column][b[column]] > mp [column][b[i]] && wp[b[i]][i] > wp [b[i]][column]) return false;
+        /* checks if the current man prefers the new woman to his partner and if the new woman prefers the current man to her partner. if this is so, we have an instability and we return false */ 
+      if(wp[b[column]][column] > wp [b[column]][i] && mp[i][b[i]] > mp [i][b[column]]) return false;
+     /* checks to see if the new man prefers to be with the current woman to his partner and if the current woman prefers the new man to her partner. if this is the case we have an instability and return false */
+    }
+    return true;    
+  }
+
+void print(int q[], int solutionPossibilities){
+    cout << "Outcome #" << solutionPossibilities << ": ";
+     for(int i = 0; i < 3; i++){ 
+        cout << q[i]; 
+     } /* The function prints out the 1-D array solution for stable marriage. This means that the number seen in the outcome, such as 102, says that a stable marriage. */
+    cout << endl;
+}
+
+int main() {
+    cout<<"Outcomes for Stable Marriage: \n";
+    int q[3] = {}, col = 0, possibleOutcomes = 0;
+    
+    //q[col] = 0; // start with 0 as the index of the array and we will check it both with mp and wp
+    /* the outer most while loop is represented as next col in the array and the inner one is next woman to be tested in the array. */ 
+    while(col>=0){ // while we are still on the 1D array from the leftmost point (row zero and col zero)
+        col++; // go to next column because we placed a stable match in the top left 
+        if(col==3) { 
+            /* if we get to the box that equals 2 (off the array) we have successfully found a stable marriage and can print the array */
+            possibleOutcomes++; // increment to start at 1
+            print(q, possibleOutcomes); /* takes two parameters: the array and the number of solutions */
+            col--; // will backtrack so we find the second solution
+        }
+        else
+        q[col] = -1;  
+        while(col>=0){ /* NextRow */                                      
+            q[col]++; // q[col] is incremented so we hit the numbers 0, 1, and 2.
+           if(q[col] == 3) col--; // backtracks after we tested all options and the ok function returned false
+            else 
+            if (ok(q,col)) break; /* everytime we change our row we go into the ok function. We break out of the inner while loop when we can place a number (returns true) in that box and go to the next box/column */
+        }
+    } /* used while loops because we want to go up and down the rows of the columns and a for loop would increment by 1 going down */
+    return 0;
+}
+
