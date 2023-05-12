@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+bool ok(int b[], int column){ 
+    /* function to check if a queen can be placed in the index of the array, q[c], which represents the row */
+    for(int i=0; i<column; i++){
+        if(b[i]==b[column] || column-i == abs(b[column]-b[i])) return false;
+        /* if one of the tests (row, down-diagonal, or up-diagonal) fails we return false and increment one in the for loop to try the next row */
+       }   
+        return true; /* if all tests pass then we can execute the line of code in the main function following the calling of the ok function */
+    }
+    
+void print(int queensArray[], int possibleOutcomes){
+    cout<<"Outcome "<<possibleOutcomes<<": ";
+    for(int i=0; i<8; i++){
+        cout<<queensArray[i]; // prints 1-D solution
+    }
+    cout<<endl;
+}
+
+int main() {
+    
+    int q[8] = {0}, outcomes = 1;
+    /* 8 for loops, below, to iterate through each possibility. Each iteration represents a column and a row on the 8x8 chess board. So the first number would be the first column and the number located in that index would be the row (ex:456, col 1 row 4, col 2 row 5, col 3 row 6; note this is an example not a possibility in this case) */
+    for(int i0=0; i0<8; i0++){ 
+        for(int i1=0; i1<8; i1++){
+            for(int i2=0; i2<8; i2++){
+                for(int i3=0; i3<8; i3++){
+                    for(int i4=0; i4<8; i4++){
+                        for(int i5=0; i5<8; i5++){
+                            for(int i6=0; i6<8; i6++){
+                                for(int i7=0; i7<8; i7++){
+                                    q[0] = i0; 
+                                    q[1] = i1; 
+                                    q[2] = i2;
+                                    q[3] = i3; 
+                                    q[4] = i4;
+                                    q[5] = i5;
+                                    q[6] = i6;
+                                    q[7] = i7; /* each index of the array (i.e. 7) will equal the column of the board. In this case the col would be 7. and the row would equal the value stored in q[7], which is i7. */
+                                    for(int k=0; k<8; k++){ /* would go through all the numbers 0000000 until 7777777 but the if statements will not print all of the results because of the restriction in the ok function */
+                                        if(ok(q, k)){ /* calling the ok function to see if we can place a queen in the current position (i.e. if it passes all the tests) */
+                                            if (k==7){ /* if we reached the final column in the array then we were able to successfully place 8 queens without the threat of them attacking the other and we can print the results*/
+                                            print(q, outcomes);
+                                            outcomes++; /* since we started solutions at 1, we want to increment it after printing so the first solution will be titled one. */ 
+                                            } 
+                                        }
+                                        else break; /* if the placement if the queen is invalid then we will break out of the innermost for loop and adjust the value to find an alternate solution */ 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }  
+            }
+        }
+    }
+
+   return 0; 
+}
+
+
+
+
+
+
+
+
+
+
+
